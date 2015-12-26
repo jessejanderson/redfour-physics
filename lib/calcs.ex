@@ -32,4 +32,8 @@ defmodule Calcs do
     val / 3600
     |> to_nearest_tenth
   end
+
+  def hours_to_seconds(val) do
+    val * 3600
+  end
 end

@@ -40,17 +40,22 @@ defmodule Physics.Rocketry do
   end
 
   # EXTRA CREDIT
-  # (doesn't seem to work?)
   # R = ³√G * M * T^2 / 4 * pi^2
-  def calculate_time_by_term(hours),        do: calculate_time_by_term(earth, hours)
-  def calculate_time_by_term(planet, hours) do
-    cube_root(newtons_gravitational_constant) * planet.mass * (hours |> squared) / 4 * (:math.pi |> squared)
-    |> orbital_radius
+  def calculate_term_by_time(hours),        do: calculate_term_by_time(earth, hours)
+  def calculate_term_by_time(planet, hours) do
+    r = (newtons_gravitational_constant * planet.mass * (hours |> hours_to_seconds |> squared)) / (4 * (:math.pi |> squared))
+    |> cube_root
+    r |> from_surface |> to_km
   end
 
-  def orbital_radius(height), do: orbital_radius(earth, height)
+  def orbital_radius(height),        do: orbital_radius(earth, height)
   def orbital_radius(planet, height) do
     planet.radius + (height |> to_m)
+  end
+
+  def from_surface(height_in_m),        do: from_surface(earth, height_in_m)
+  def from_surface(planet, height_in_m) do
+    height_in_m - planet.radius
   end
 
   defp calculate_escape(%{mass: mass, radius: radius}) do
