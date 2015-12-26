@@ -1,12 +1,13 @@
 defmodule Physics.Rocketry do
 
   import Calcs
-  import Physics.Laws
+  # exclude everything but the one function we need. You must specify arity here
+  import Physics.Laws, only: [newtons_gravitational_constant: 0]
   import Planets
 
-  def escape_velocity(:earth), do: escape_velocity(earth)
-  def escape_velocity(:moon),  do: escape_velocity(moon)
-  def escape_velocity(:mars),  do: escape_velocity(mars)
+  def escape_velocity(:earth),                    do: escape_velocity(earth)
+  def escape_velocity(:moon),                     do: escape_velocity(moon)
+  def escape_velocity(:mars),                     do: escape_velocity(mars)
   def escape_velocity(planet) when is_map(planet) do
     planet
     |> calculate_escape
@@ -14,8 +15,8 @@ defmodule Physics.Rocketry do
     |> to_nearest_tenth
   end
 
-  def orbital_speed(height),        do: orbital_speed(earth, height)
-  def orbital_speed(planet, height) do
+  def orbital_speed(height),                do: orbital_speed(earth, height)
+  def orbital_speed(planet, height)         do
     newtons_gravitational_constant * planet.mass / orbital_radius(height)
     |> square_root
   end
@@ -29,11 +30,11 @@ defmodule Physics.Rocketry do
   end
 
   # T = √(4 * pi^2 * R^3) / G * M
-  def orbital_term(height),         do: orbital_term(earth, height)
-  def orbital_term(:earth, height), do: orbital_term(earth, height)
-  def orbital_term(:moon, height),  do: orbital_term(moon, height)
-  def orbital_term(:mars, height),  do: orbital_term(mars, height)
-  def orbital_term(planet, height)  do
+  def orbital_term(height),                 do: orbital_term(earth, height)
+  def orbital_term(:earth, height),         do: orbital_term(earth, height)
+  def orbital_term(:moon, height),          do: orbital_term(moon, height)
+  def orbital_term(:mars, height),          do: orbital_term(mars, height)
+  def orbital_term(planet, height)          do
     4 * (:math.pi |> squared) * (orbital_radius(planet, height) |> cubed) / (newtons_gravitational_constant * planet.mass)
     |> square_root
     |> seconds_to_hours
@@ -48,8 +49,8 @@ defmodule Physics.Rocketry do
     r |> from_surface |> to_km
   end
 
-  def orbital_radius(height),        do: orbital_radius(earth, height)
-  def orbital_radius(planet, height) do
+  def orbital_radius(height),           do: orbital_radius(earth, height)
+  def orbital_radius(planet, height)    do
     planet.radius + (height |> to_m)
   end
 
